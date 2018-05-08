@@ -20,6 +20,7 @@ export default class GradeBot extends Component {
     instructions: [],
     tests: [],
     passing:[],
+    syntax: 'javascript',
     completed: false
   }
 
@@ -105,8 +106,6 @@ export default class GradeBot extends Component {
             </div>
             <div className="challenge-tests">
               <h3>Tests</h3>
-              <h1>{this.state.syntax}</h1>
-              <h1>hello</h1>
               <TestSuite passing={this.state.passing}tests={tests}/>
             </div>
           </div>
