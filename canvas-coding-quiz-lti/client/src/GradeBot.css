@@ -27,7 +27,36 @@
   width: 40%;
 }
 
-#editor {
+#editor, iframe {
   margin-top: 50px;
 }
 
+.editor-div {
+  display: flex;
+  justify-content: center;
+  flex-flow: wrap;
+}
+
+iframe {
+  width: 212px;
+  height: 378px;
+  position: absolute;
+  top: 39px;
+  right: 172px;
+  overflow-y: scroll;
+}
+
+img {
+  width: 40em;
+  z-index: -1;
+}
+
+.iphone {
+  /* width: 100%;
+  height: 100%; */
+  position: relative;
+  /* min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px; */
+  max-height: 500px;
+}

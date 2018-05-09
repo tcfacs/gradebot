@@ -36,8 +36,10 @@ export default class GradeBot extends Component {
   }
 
   makeTests = () => {
-    let code = this._editor ? this._editor.getValue() : this.state.challengeSeed.join("\n")
-    let data = { 
+    const iFrameDoc = document.getElementById('iframe').contentWindow.document
+    const code = this._editor ? this._editor.getValue() : this.state.challengeSeed.join("\n")
+    iFrameDoc.body.innerHTML = code
+    const data = { 
       code,
       head: this.state.assignment.head && this.state.assignment.head.join('\n'),
       tail: this.state.assignment.tail && this.state.assignment.tail.join('\n'),
@@ -53,7 +55,9 @@ export default class GradeBot extends Component {
 
   async componentDidMount() {
     this._editor = this.ace.editor
+    this._editor.session.setOption("indentedSoftWrap", false)
     this.challengeSeed = this.state.assignment.challengeSeed
+  
     await httpClient.getChallenge()
       .then(res => {
         console.log(res.data)
@@ -84,7 +88,6 @@ export default class GradeBot extends Component {
             tests,
             completed } = this.state
     let passed = tests.length === this.state.passing.length && !this.state.passing.includes(false)
-    console.log(this.state.syntax)
 
     return (
       <div>
@@ -109,22 +112,36 @@ export default class GradeBot extends Component {
               <TestSuite passing={this.state.passing}tests={tests}/>
             </div>
           </div>
-          <AceEditor 
-            name="editor"
-            mode={this.state.syntax}
-            theme="monokai"
-            value={challengeSeed.join("\n")}
-            ref={instance => { this.ace = instance; }}
-            editorProps={{$blockScrolling: true}}
-          />
-          <div className={"submit-btns"}>
-          { !passed ? 
-              [<input key={"btn1"}className={"btn"} type="button" defaultValue="Check Code" onClick={this.makeTests} />,
-              <input key={"btn2"}className={"btn reset"} type="button" defaultValue="Reset Solution" onClick={this.onReset} />]
-            : 
-              <input className={"btn"} type="button" defaultValue="Submit Solution" onClick={this.submit_solution}/>  
-          }
+          <div class="editor-div">
+            <div>
+              <AceEditor 
+                name="editor"
+                mode={this.state.syntax}
+                theme="monokai"
+                value={challengeSeed.join("\n")}
+                ref={instance => { this.ace = instance; }}
+                wrapEnabled={true}
+                indentedSoftWrap={false}
+                editorProps={{$blockScrolling: true}}
+              />
+              <div className={"submit-btns"}>
+                { !passed ? 
+                    [<input key={"btn1"}className={"btn"} type="button" defaultValue="Check Code" onClick={this.makeTests} />,
+                    <input key={"btn2"}className={"btn reset"} type="button" defaultValue="Reset Solution" onClick={this.onReset} />]
+                  : 
+                    <input className={"btn"} type="button" defaultValue="Submit Solution" onClick={this.submit_solution}/>  
+                }
+              </div>
+            </div>
+            <div class="iphone" style={{display: this.state.syntax !== "html" ? 'none' : 'flex'}}>
+              <div>
+                <img src="./iphone.png" />  
+                <iframe id="iframe"></iframe>         
+              </div>
+            </div>
+            
           </div>
+
         </div>
         }
       </div>
