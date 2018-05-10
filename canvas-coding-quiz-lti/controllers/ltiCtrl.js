@@ -113,6 +113,7 @@ function get (req,res) {
   // console.log(req.session.cheapsession[req.params.sessionId])
   console.log("hello",req.params)
   req.session.assignment = getAssignment(req.params.challengeId)
+  req.session.syntax = req.params.syntax
   // console.log("syntax:",req.session.assignment)
   // console.log("this is the session in get:", req.session)
   // req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
