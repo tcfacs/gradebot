@@ -73,6 +73,7 @@ function check(req, res) {
 }
 
 module.exports ={
-  get,
+  getState,
+  getInit,
   check
 }
