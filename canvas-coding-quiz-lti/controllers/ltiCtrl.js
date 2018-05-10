@@ -48,11 +48,11 @@ async function post(req, res) {
       }
       req.session.sessid = Math.floor(Math.random() * 1000000).toString()
       id = req.session.sessid
-      req.session.cheapsession = {}
-      cheapsession[id] = {provider, assignment, syntax:req.query.syntax}
-      req.session.cheapsession[req.session.sessid] = { provider, assignment, syntax:req.query.syntax }
+      // req.session.cheapsession = {}
+      // cheapsession[id] = {provider, assignment, syntax:req.query.syntax}
+      // req.session.cheapsession[req.session.sessid] = { provider, assignment, syntax:req.query.syntax }
       // cheapsession[000] = { provider }
-      req.session.assignment = assignment
+      // req.session.assignment = assignment
       const syntax = req.query.syntax || "javascript"
       // console.log(req.session.assignment)
       return res.redirect(`/lti/${req.query.assignmentid}/${req.session.sessid}/${syntax}`)
