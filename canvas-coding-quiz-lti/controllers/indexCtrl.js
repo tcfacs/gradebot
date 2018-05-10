@@ -58,8 +58,8 @@ let codeEval = (req, res, next) => {
 }
 
 function getInit(req,res) {
-  // console.log(req.params)
-  res.redirect('/')
+  res.sendFile(`${__dirname}/client/build/index.html`)
+  
 }
 
 function getState(req, res) {

@@ -25,9 +25,10 @@ app.use(express.static(path.join(__dirname, "/client/build")));
 app.use('/', indexRoute)
 app.use('/lti', ltiRoute)
 
-// app.get('*', (req, res) => {
-//   res.send('./client/public/index.html')
-// })
+app.get('/:assignmentId/:sessionId', (req, res) => {
+  res.sendFile(`${__dirname}/client/build/index.html`)
+})
+
 
 app.listen(PORT, function (err) {
   console.log(err || `ltitool on ${PORT}`)
