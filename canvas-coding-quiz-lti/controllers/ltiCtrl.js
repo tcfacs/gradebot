@@ -110,7 +110,7 @@ async function submit(req, res) {
 function get (req,res) {
   console.log(cheapsession)
   // console.log(req.session.cheapsession[req.params.sessionId])
-  // console.log(req.session)
+  console.log(req.parmas)
   req.session.assignment = getAssignment(req.params.assignmentId)
   req.session.syntax = req.params.syntax
   // req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
