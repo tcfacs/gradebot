@@ -6,9 +6,9 @@ httpClient.getChallenge = function() {
 	return this({ method: 'get', url: '/get-state'})
 }
 
-httpClient.testCode = function(data, assignmentId) {
+httpClient.testCode = function(data) {
   console.log(assignmentId)
-  return this({method: 'post', url:`/check-answer/${assignmentId}`, data})
+  return this({method: 'post', url:`/check-answer`, data})
 }
 
 httpClient.grade = function(body) {
