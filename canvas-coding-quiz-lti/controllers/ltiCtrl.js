@@ -112,6 +112,7 @@ function get (req,res) {
   // console.log(req.params)
   req.session.assignment = getAssignment(req.params.assignmentId)
   req.session.syntax = req.params.syntax
+  console.log("this is the session in get:", req.session)
   // req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
   res.sendFile(path.resolve(`${__dirname}/../client/build/index.html`))
 }
