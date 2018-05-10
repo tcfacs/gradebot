@@ -59,7 +59,7 @@ let codeEval = (req, res, next) => {
 
 function getInit(req,res) {
   console.log(req.params)
-  res.send('../client/public/index.html')
+  res.redirect('/')
 }
 
 function getState(req, res) {
