@@ -56,7 +56,7 @@ async function post(req, res) {
       req.session.assignment.syntax = req.query.syntax
       req.session.syntax = req.query.syntax
       // console.log(req.session.assignment)
-      return res.redirect(`/${req.query.assignmentid}/${id}`)
+      return res.redirect(`/lti/${req.query.assignmentid}/${id}`)
       // return res.redirect(`/ `)
     }
   })
@@ -108,7 +108,8 @@ async function submit(req, res) {
 }
 
 function get (req,res) {
-  // res.redirect(`/${req.params.challengeId}/${sessionId}`)
+  console.log(req.sesson.cheapsession[req.params])
+  res.sendFile(`${__dirname}/../client/build/index.html`)
 }
 
 module.exports = {
