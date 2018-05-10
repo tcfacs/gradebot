@@ -45,7 +45,8 @@ export default class GradeBot extends Component {
       code,
       head: this.state.assignment.head && this.state.assignment.head.join('\n'),
       tail: this.state.assignment.tail && this.state.assignment.tail.join('\n'),
-      tests: this.state.assignment.tests
+      tests: this.state.assignment.tests,
+      syntax: this.state.syntax
     }
 
     httpClient.testCode(data, assignmentId)

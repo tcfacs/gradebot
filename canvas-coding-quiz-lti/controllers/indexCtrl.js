@@ -38,7 +38,7 @@ let codeEval = (req, res, next) => {
   const tests = data.tests
   console.log(tests)
   const evalOfTests = []
-  const isHTML = req.session.syntax === "html"
+  const isHTML = data.syntax === "html"
   const code = isHTML ? `"${data.code}"` : data.code
   const { window } = new JSDOM(`<html><body>${code.toString()}</body></html>`)
   const $ = require('jquery')(window)
