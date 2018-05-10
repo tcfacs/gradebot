@@ -25,10 +25,10 @@ app.use(express.static(path.join(__dirname, "/client/build")));
 app.use('/', indexRoute)
 app.use('/lti', ltiRoute)
 
-app.get('/:assignmentId/:sessionId', (req, res) => {
-  console.log(req.sesson.cheapsession[req.params])
-  res.sendFile(`${__dirname}/client/build/index.html`)
-})
+// app.get('/:assignmentId/:sessionId', (req, res) => {
+//   console.log(req.sesson.cheapsession[req.params])
+//   res.sendFile(`${__dirname}/client/build/index.html`)
+// })
 
 
 app.listen(PORT, function (err) {
