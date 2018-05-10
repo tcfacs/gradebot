@@ -64,8 +64,9 @@ function getInit(req,res) {
 
 function getState(req, res) {
   const assignment = getAssignment('bad87fed1348bd9aedf08833')
-  assignment.syntax = req.session.syntax || 'html'
+  // assignment.syntax = req.session.syntax || 'html'
   // console.log(assignment.syntax)
+  console.log(req.session.assignment)
   res.send({assignment: req.session.assignment || assignment, sessionId: req.session.sessionId})
 }
 
