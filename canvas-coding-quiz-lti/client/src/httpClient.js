@@ -7,7 +7,6 @@ httpClient.getChallenge = function() {
 }
 
 httpClient.testCode = function(data) {
-  console.log(assignmentId)
   return this({method: 'post', url:`/check-answer`, data})
 }
 
