@@ -53,9 +53,7 @@ async function post(req, res) {
       req.session.cheapsession[req.session.sessid] = { provider, assignment, syntax:req.query.syntax }
       // cheapsession[000] = { provider }
       req.session.assignment = assignment
-      req.session.assignment.syntax = req.query.syntax
-      syntax = req.query
-      console.log("syntax:", syntax )
+      req.session.assignment.syntax = req.query.syntax || "javascript"
       // console.log(req.session.assignment)
       return res.redirect(`/lti/${req.query.assignmentid}/${req.session.sessid}/${syntax}`)
       // return res.redirect(`/ `)
