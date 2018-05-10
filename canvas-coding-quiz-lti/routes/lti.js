@@ -4,8 +4,8 @@ const express = require('express'),
 
 router.post('/', ltiCtrl.post)
 router.post('/grade', ltiCtrl.submit)
-// router.get('/:challengeId/:sessionId', ltiCtrl.get)
-router.get('/', ltiCtrl.get)
+router.get('/:challengeId/:sessionId', ltiCtrl.get)
+// router.get('/', ltiCtrl.get)
 
 
 

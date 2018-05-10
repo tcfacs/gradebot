@@ -88,7 +88,6 @@ export default class GradeBot extends Component {
             tests,
             completed } = this.state
     let passed = tests.length === this.state.passing.length && !this.state.passing.includes(false)
-
     return (
       <div>
         {completed ? < Completed title={assignment.title}/> :

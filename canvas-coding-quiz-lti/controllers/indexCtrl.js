@@ -56,7 +56,11 @@ let codeEval = (req, res, next) => {
   return evalOfTests;
 }
 
-function get(req, res) {
+function getInit(req,res) {
+  
+}
+
+function getState(req, res) {
   // const assignment = getAssignment('bad87fed1348bd9aedf08833')
   // assignment.syntax = req.session.syntax || 'html'
   // console.log(assignment.syntax)
