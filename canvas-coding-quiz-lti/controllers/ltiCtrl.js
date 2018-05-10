@@ -109,6 +109,7 @@ async function submit(req, res) {
 
 function get (req,res) {
   console.log(cheapsession)
+  console.log(req.session)
   // console.log(req.session.cheapsession[req.params.sessionId])
   res.sendFile(path.resolve(`${__dirname}/../client/build/index.html`))
 }
