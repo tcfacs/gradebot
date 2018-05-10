@@ -49,7 +49,7 @@ async function post(req, res) {
       req.session.sessid = Math.floor(Math.random() * 1000000).toString()
       id = req.session.sessid
       req.session.cheapsession = {}
-      cheapsession[id] = {provider, assignment, req}
+      cheapsession[id] = {provider, assignment, req, syntax:req.query.syntax}
       req.session.cheapsession[req.session.sessid] = { provider, assignment }
       // cheapsession[000] = { provider }
       req.session.assignment = assignment
@@ -110,7 +110,9 @@ async function submit(req, res) {
 function get (req,res) {
   // console.log(cheapsession[req.params.sessionId])
   console.log(req.session.cheapsession[req.params.sessionId])
-  // console.log(req.session.cheapsession[req.params.sessionId])
+  console.log(req.session)
+  req.session.assignment = req.session.cheapsession[req.params.sessionId].assignment
+  req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
   res.sendFile(path.resolve(`${__dirname}/../client/build/index.html`))
 }
 
