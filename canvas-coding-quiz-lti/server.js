@@ -26,7 +26,7 @@ app.use('/', indexRoute)
 app.use('/lti', ltiRoute)
 
 app.get('/:assignmentId/:sessionId', (req, res) => {
-  console.log(cheapsession[req.params.sessionId])
+  console.log(res.sesson.cheapsession[req.params])
   res.sendFile(`${__dirname}/client/build/index.html`)
 })
 
