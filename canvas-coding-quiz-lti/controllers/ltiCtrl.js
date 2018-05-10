@@ -55,6 +55,7 @@ async function post(req, res) {
       req.session.assignment = assignment
       req.session.assignment.syntax = req.query.syntax
       syntax = req.query.syntax
+      console.log("syntax:", syntax )
       // console.log(req.session.assignment)
       return res.redirect(`/lti/${req.query.assignmentid}/${req.session.sessid}/${syntax}`)
       // return res.redirect(`/ `)
@@ -108,9 +109,9 @@ async function submit(req, res) {
 }
 
 function get (req,res) {
-  console.log(cheapsession)
+  // console.log(cheapsession)
   // console.log(req.session.cheapsession[req.params.sessionId])
-  console.log(req.params)
+  // console.log(req.params)
   req.session.assignment = getAssignment(req.params.assignmentId)
   req.session.syntax = req.params.syntax
   // req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
