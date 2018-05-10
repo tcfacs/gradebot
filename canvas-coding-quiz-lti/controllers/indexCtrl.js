@@ -33,7 +33,7 @@ function load_freecodecamp_challenges() {
 
 // Helper Functions
 let codeEval = (req, res, next) => {
-  console.log(req.params)
+  // console.log(req.params)
   const data = req.body;
   const tests = data.tests
   const evalOfTests = []
@@ -50,7 +50,7 @@ let codeEval = (req, res, next) => {
       vm.runInContext(fullTest, sandbox);
       evalOfTests.push(true)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
       evalOfTests.push(false)
     }
    })
@@ -58,7 +58,7 @@ let codeEval = (req, res, next) => {
 }
 
 function getInit(req,res) {
-  console.log(req.params)
+  // console.log(req.params)
   res.redirect('/')
 }
 

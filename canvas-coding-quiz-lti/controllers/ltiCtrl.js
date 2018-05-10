@@ -12,7 +12,7 @@ function getAssignment(id) {
     // console.log('found FCC challenge',challenge)
     return challenge
   }
-  console.error(`unable to find assignment with id ${id}`)
+  // console.error(`unable to find assignment with id ${id}`)
 }
 
 function load_freecodecamp_challenges() {
@@ -32,7 +32,7 @@ async function post(req, res) {
   const provider = new lti.Provider( config.consumer_key,  config.consumer_secret )
   provider.valid_request(req, async (err, isValid) => {
     if (err) {
-      console.error('invalid request',err)
+      // console.error('invalid request',err)
       res.send(err + ". check your consumer key and consumer secret (and nginx https proxy header)")
     } else {
       const assignment_id = req.body.custom_canvas_assignment_id || req.body.assignmentid
@@ -41,7 +41,7 @@ async function post(req, res) {
       const submitted = await canvas.req(`/courses/${course_id}/assignments/${assignment_id}/submissions/${user_id}`)
       const assignments_link = `/courses/${course_id}/assignments`
       let assignmnet;
-      console.log('provider good',provider)
+      // console.log('provider good',provider)
       // if external tool is an assignment, then it will have outcome_service_url
       if (req.query.assignmentid) {
         assignment = getAssignment(req.query.assignmentid)
@@ -95,7 +95,7 @@ async function submit(req, res) {
     }
     // console.log('user submitting grade correct:',correct)
     if (correct) {
-      console.log("this is correct")
+      // console.log("this is correct")
       return provider.outcome_service.send_replace_result_with_text( 1, code, cb )
     } else {
       res.send({error:'incorrect solution.'})
