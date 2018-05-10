@@ -33,6 +33,7 @@ function load_freecodecamp_challenges() {
 
 // Helper Functions
 let codeEval = (req, res, next) => {
+  console.log(req.params)
   const data = req.body;
   const tests = data.tests
   const evalOfTests = []
@@ -58,11 +59,12 @@ let codeEval = (req, res, next) => {
 
 function getInit(req,res) {
   console.log(req.params)
+  res.send('./client/public/index.html')
 }
 
 function getState(req, res) {
-  // const assignment = getAssignment('bad87fed1348bd9aedf08833')
-  // assignment.syntax = req.session.syntax || 'html'
+  const assignment = getAssignment('bad87fed1348bd9aedf08833')
+  assignment.syntax = req.session.syntax || 'html'
   // console.log(assignment.syntax)
   res.send({assignment: req.session.assignment || assignment, sessionId: req.session.sessionId})
 }

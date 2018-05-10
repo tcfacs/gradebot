@@ -36,6 +36,7 @@ export default class GradeBot extends Component {
   }
 
   makeTests = () => {
+    const assignmentId = this.state.assignment.id
     const iFrameDoc = document.getElementById('iframe').contentWindow.document
     const code = this._editor ? this._editor.getValue() : this.state.challengeSeed.join("\n")
     iFrameDoc.body.innerHTML = code
@@ -46,7 +47,7 @@ export default class GradeBot extends Component {
       tests: this.state.assignment.tests
     }
 
-    httpClient.testCode(data)
+    httpClient.testCode(data, assignmentId)
       .then(res => this.setState({ 
         passing: res.data,
         challengeSeed:[code]
