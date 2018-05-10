@@ -107,9 +107,9 @@ async function submit(req, res) {
   }
 }
 
-// function get (req,res) {
-//   res.redirect(`/${req.params.challengeId}/${sessionId}`)
-// }
+function get (req,res) {
+  // res.redirect(`/${req.params.challengeId}/${sessionId}`)
+}
 
 module.exports = {
   submit,
