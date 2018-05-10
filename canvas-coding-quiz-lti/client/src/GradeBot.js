@@ -6,6 +6,7 @@ import Completed from './components/Completed/Completed'
 import AceEditor from 'react-ace'
 import React, { Component } from 'react'
 import httpClient from './httpClient.js'
+import iPhone from './iphone.png'
 
 import 'brace/mode/javascript'
 import 'brace/mode/html'
@@ -135,7 +136,7 @@ export default class GradeBot extends Component {
             </div>
             <div class="iphone" style={{display: this.state.syntax !== "html" ? 'none' : 'flex'}}>
               <div>
-                <img src="./iphone.png" />  
+                <img src={iPhone} />  
                 <iframe id="iframe"></iframe>         
               </div>
             </div>
