@@ -109,7 +109,7 @@ async function submit(req, res) {
 
 function get (req,res) {
   console.log(req.params)
-  res.sendFile(`${__dirname}/../client/build/index.html`)
+  res.sendFile(path.resolve(`${__dirname}/../client/build/index.html`))
 }
 
 module.exports = {
