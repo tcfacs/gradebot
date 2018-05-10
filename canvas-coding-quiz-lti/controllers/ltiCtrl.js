@@ -51,7 +51,7 @@ async function post(req, res) {
       req.session.cheapsession = {}
       cheapsession[id] = {provider, assignment, req}
       req.session.cheapsession[req.session.sessid] = { provider, assignment }
-      cheapsession[000] = { provider }
+      // cheapsession[000] = { provider }
       req.session.assignment = assignment
       req.session.assignment.syntax = req.query.syntax
       req.session.syntax = req.query.syntax
