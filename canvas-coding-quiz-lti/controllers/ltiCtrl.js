@@ -64,6 +64,7 @@ async function post(req, res) {
 }
 
 async function submit(req, res) {
+  console.log(req.session.cheapsession)
   const sessid = req.session.sessid
   const data = req.session.cheapsession[sessid]
   if (data) {
