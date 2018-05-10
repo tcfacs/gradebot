@@ -4,7 +4,7 @@ const express = require('express'),
 
 router.post('/', ltiCtrl.post)
 router.post('/grade', ltiCtrl.submit)
-router.get('/:challengeId/:syntax/:htmlId/', ltiCtrl.get)
+router.get('/:challengeId/:syntax', ltiCtrl.get)
 // router.get('/', ltiCtrl.get)
 
 
