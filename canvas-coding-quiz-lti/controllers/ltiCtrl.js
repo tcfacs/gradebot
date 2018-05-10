@@ -30,11 +30,9 @@ function load_freecodecamp_challenges() {
 async function post(req, res) {
   /* TODO - fetch user's previous submission */
   const provider = new lti.Provider( config.consumer_key,  config.consumer_secret )
-  // console.log('lti launch params',req.body)
-  // console.log(provider.valid_request)
   provider.valid_request(req, async (err, isValid) => {
     if (err) {
-      // console.error('invalid request',err)
+      console.error('invalid request',err)
       res.send(err + ". check your consumer key and consumer secret (and nginx https proxy header)")
     } else {
       const assignment_id = req.body.custom_canvas_assignment_id || req.body.assignmentid
@@ -42,17 +40,13 @@ async function post(req, res) {
       const user_id = req.body.custom_canvas_user_id
       const submitted = await canvas.req(`/courses/${course_id}/assignments/${assignment_id}/submissions/${user_id}`)
       const assignments_link = `/courses/${course_id}/assignments`
-
-      // console.log('provider good',provider)
-
       let assignmnet;
-      // console.log('provider good',provider)
+      console.log('provider good',provider)
       // if external tool is an assignment, then it will have outcome_service_url
       if (req.query.assignmentid) {
         assignment = getAssignment(req.query.assignmentid)
       }
-      req.session.sessid = Math.floor(Math.random() * 1000000)
-      .toString()
+      req.session.sessid = Math.floor(Math.random() * 1000000).toString()
       id = req.session.sessid
       req.session.cheapsession = {}
       cheapsession[id] = {provider, assignment, req}
@@ -62,7 +56,7 @@ async function post(req, res) {
       req.session.assignment.syntax = req.query.syntax
       req.session.syntax = req.query.syntax
       // console.log(req.session.assignment)
-      return res.redirect(`/lti/${assignment_id}/${id}`)
+      return res.redirect(`/${req.query.assignmentid}/${id}`)
       // return res.redirect(`/ `)
     }
   })
@@ -113,10 +107,9 @@ async function submit(req, res) {
   }
 }
 
-function get (req,res) {
-  console.log("here are the params", req.params)
-  res.redirect(`/${req.params.assignmentid}`)
-}
+// function get (req,res) {
+//   res.redirect(`/${req.params.challengeId}/${sessionId}`)
+// }
 
 module.exports = {
   submit,

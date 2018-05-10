@@ -57,7 +57,7 @@ let codeEval = (req, res, next) => {
 }
 
 function getInit(req,res) {
-  
+  console.log(req.params)
 }
 
 function getState(req, res) {
