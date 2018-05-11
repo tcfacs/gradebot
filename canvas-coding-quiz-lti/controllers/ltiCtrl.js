@@ -54,8 +54,6 @@ async function post(req, res) {
       // cheapsession[000] = { provider }
       // req.session.assignment = assignment
       const syntax = req.query.syntax || "javascript"
-
-      console.log("first:", `/lti/${req.query.assignmentid}/${req.session.sessid}/${syntax}`)
       // console.log(req.session.assignment)
       return res.redirect(`/lti/${req.query.assignmentid}/${syntax}/88`)
       // return res.redirect(`/ `)
@@ -64,7 +62,7 @@ async function post(req, res) {
 }
 
 async function submit(req, res) {
-  console.log(req.session.cheapsession)
+  console.log(req.session.cheapsession, "~~~~~~")
   const sessid = req.session.sessid
   const data = req.session.cheapsession[sessid]
   if (data) {
@@ -112,7 +110,7 @@ async function submit(req, res) {
 function get (req,res) {
   // console.log(cheapsession)
   // console.log(req.session.cheapsession[req.params.sessionId])
-  console.log("hello",req.params)
+  console.log("hello",req.session.cheapsession)
   req.session.assignment = getAssignment(req.params.challengeId)
   req.session.syntax = req.params.syntax
   // console.log("syntax:",req.session.assignment)

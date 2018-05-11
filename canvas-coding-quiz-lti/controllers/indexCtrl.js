@@ -36,7 +36,6 @@ let codeEval = (req, res, next) => {
   // console.log(req.params)
   const data = req.body;
   const tests = data.tests
-  console.log(tests)
   const evalOfTests = []
   const isHTML = data.syntax === "html"
   const code = isHTML ? `"${data.code}"` : data.code
@@ -51,7 +50,7 @@ let codeEval = (req, res, next) => {
       vm.runInContext(fullTest, sandbox);
       evalOfTests.push(true)
     } catch (e) {
-      console.log(e)
+      // console.log(e)
       evalOfTests.push(false)
     }
    })
