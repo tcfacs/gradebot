@@ -60,3 +60,7 @@ img {
   padding-right: 15px; */
   max-height: 500px;
 }
+
+.ace-editor-div {
+  max-width: 420px;
+}

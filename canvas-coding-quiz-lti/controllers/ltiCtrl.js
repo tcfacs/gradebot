@@ -1,22 +1,30 @@
 const lti = require('ims-lti')
-const config = require('../config')
+const vm = require('vm')
+const chai = require('chai')
+const expect = require('chai').expect
+const assert = chai.assert
+const jsdom = require('jsdom')
+const { JSDOM } = jsdom
 const fs =require('fs')
 const path = require('path')
 const cheapsession = {}
 const fcc = load_freecodecamp_challenges()
+const config = require('../config')
 
 //Helper Functions
 function getAssignment(id) {
   if (fcc.fcc_index[id]) {
     const challenge = fcc.fcc_index[id]
-    // console.log('found FCC challenge',challenge)
+    console.log('found FCC challenge',challenge)
     return challenge
   }
-  // console.error(`unable to find assignment with id ${id}`)
+  console.error(`unable to find assignment with id ${id}`)
 }
 
 function load_freecodecamp_challenges() {
-  const fcc_includes = [ 'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-html-and-html5.json' ]
+  const fcc_includes = [ 'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-html-and-html5.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-css.json',
+  'freeCodeCamp/seed/challenges/03-front-end-libraries/bootstrap.json', 'freeCodeCamp/seed/challenges/03-front-end-libraries/jquery.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/css-flexbox.json', 'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/es6.json'
+  ]
   const fcc_index = {}
   fcc_includes.forEach(c => {
     const fcc_data = JSON.parse(fs.readFileSync(c))   
@@ -27,46 +35,60 @@ function load_freecodecamp_challenges() {
   return {fcc_index}
 }
 
+let codeEval = (req, res, next) => {
+  const data = req.body;
+  const tests = data.tests
+  const evalOfTests = []
+  const isHTML = data.syntax === "html"
+  const code = isHTML ? `"${data.code}"` : data.code
+  const { window } = new JSDOM(`<html><body>${code}</body></html>`).window
+  const $ = require('jquery')(window)
+  const document = window.document
+  // window.document.body.innerHTML += code
+  const sandbox = { assert, expect, chai, document, $, code};
+  vm.createContext(sandbox);
+  tests.forEach(test => {
+    let fullTest = isHTML ? test : `${data.head} \n  \n ${code};; \n ${data.tail} \n ${test} `
+    try {
+      vm.runInContext(fullTest, sandbox);
+      evalOfTests.push(true)
+    } catch (e) {
+      console.log(e)
+      evalOfTests.push(false)
+    }
+   })
+  return evalOfTests;
+}
+
 async function post(req, res) {
   /* TODO - fetch user's previous submission */
   const provider = new lti.Provider( config.consumer_key,  config.consumer_secret )
   provider.valid_request(req, async (err, isValid) => {
     if (err) {
-      // console.error('invalid request',err)
+      console.error('invalid request',err)
       res.send(err + ". check your consumer key and consumer secret (and nginx https proxy header)")
     } else {
-      const assignment_id = req.body.custom_canvas_assignment_id || req.body.assignmentid
-      const course_id = req.body.custom_canvas_course_id
-      const user_id = req.body.custom_canvas_user_id
-      const submitted = await canvas.req(`/courses/${course_id}/assignments/${assignment_id}/submissions/${user_id}`)
-      const assignments_link = `/courses/${course_id}/assignments`
+      console.log('provider good',provider)
+      const assignmentId = req.query.assignmentid
       let assignmnet;
-      // console.log('provider good',provider)
       // if external tool is an assignment, then it will have outcome_service_url
-      if (req.query.assignmentid) {
+      if (assignmentId) {
         assignment = getAssignment(req.query.assignmentid)
       }
-      req.session.sessid = Math.floor(Math.random() * 1000000).toString()
-      id = req.session.sessid
-      req.session.cheapsession = req.session.cheapsession || {}
-      cheapsession[id] = {provider, assignment, syntax:req.query.syntax}
-      req.session.cheapsession[req.session.sessid] = { provider, assignment, syntax:req.query.syntax }
-      // cheapsession[000] = { provider }
-      // req.session.assignment = assignment
-      const syntax = req.query.syntax || "javascript"
-      // console.log(req.session.assignment)
-      return res.redirect(`/lti/${req.query.assignmentid}/${syntax}/88`)
-      // return res.redirect(`/ `)
+      const id = Math.floor(Math.random() * 1000000).toString()
+      assignment.nextAssignment = {courseId: provider.body.custom_canvas_course_id, assignmentId: + provider.body.custom_canvas_assignment_id + 1}
+      assignment.syntax = req.query.syntax || "javascript"
+      cheapsession[id] = {provider, assignment}
+      return res.redirect(`/lti/${assignmentId}/${id}/`)
     }
   })
 }
 
-async function submit(req, res) {
-  console.log(req.session.cheapsession, "~~~~~~")
-  const sessid = req.session.sessid
-  const data = req.session.cheapsession[sessid]
+function submit(req, res) {
+  const sessid = req.params.sessionId
+  const data = cheapsession[sessid]
   if (data) {
-    // console.log('found session',data)
+    console.log('found session',data)
     // const origbody = data.req.body
     // use these two to check if the student already made a submission
     // get single user's submission:
@@ -88,18 +110,22 @@ async function submit(req, res) {
       res.send({error:'you must be a student to submit'})
       return
     }
-    function cb(err, result) {
+    // function cb(err, result) { 
       // console.log('grade submission result',err,result)
-      return {f: "hello"}
+      // return
       // redirect them to there grade
-    }
+    // }
     // console.log('user submitting grade correct:',correct)
     if (correct) {
-      // console.log("this is correct")
-      return provider.outcome_service.send_replace_result_with_text( 1, code, cb )
+      console.log("this is correct")
+      provider.outcome_service.send_replace_result_with_text( 1, code, (err, result) => {
+        return res.send({ message: result  })
+      } )
     } else {
       res.send({error:'incorrect solution.'})
-      provider.outcome_service.send_replace_result_with_text( 0, code, cb )
+      provider.outcome_service.send_replace_result_with_text( 0, code, (err, result) => {
+        return res.send({ message: result })
+      })
     }
     
   } else {
@@ -108,22 +134,25 @@ async function submit(req, res) {
 }
 
 function get (req,res) {
-  // console.log(cheapsession)
-  // console.log(req.session.cheapsession[req.params.sessionId])
-  console.log("hello",req.session.cheapsession)
-  req.session.assignment = getAssignment(req.params.challengeId)
-  req.session.syntax = req.params.syntax
-  // console.log("syntax:",req.session.assignment)
-  // console.log("this is the session in get:", req.session)
-  // req.session.syntax = req.session.cheapsession[req.params.sessionId].syntax
   res.sendFile(path.resolve(`${__dirname}/../client/build/index.html`))
+}
+
+function getState(req, res) {
+  const assignment = cheapsession[req.params.sessionId].assignment
+  res.send({assignment, sessionId: req.params.sessionId})
+}
+
+function check(req, res) {
+  const resultsArr = codeEval(req,res)
+  res.send(resultsArr)
 }
 
 module.exports = {
   submit,
   get,
   post,
-  load_freecodecamp_challenges,
-  getAssignment
+  getAssignment,
+  getState,
+  check
 }
 
