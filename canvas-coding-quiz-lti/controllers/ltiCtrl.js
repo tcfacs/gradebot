@@ -22,8 +22,15 @@ function getAssignment(id) {
 }
 
 function load_freecodecamp_challenges() {
-  const fcc_includes = [ 'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-html-and-html5.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-css.json',
-  'freeCodeCamp/seed/challenges/03-front-end-libraries/bootstrap.json', 'freeCodeCamp/seed/challenges/03-front-end-libraries/jquery.json', 'freeCodeCamp/seed/challenges/01-responsive-web-design/css-flexbox.json', 'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/es6.json'
+  const fcc_includes = [ 
+    'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json', 
+    'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-html-and-html5.json', 
+    'freeCodeCamp/seed/challenges/01-responsive-web-design/basic-css.json',
+    'freeCodeCamp/seed/challenges/03-front-end-libraries/bootstrap.json', 
+    'freeCodeCamp/seed/challenges/03-front-end-libraries/jquery.json', 
+    'freeCodeCamp/seed/challenges/01-responsive-web-design/css-flexbox.json', 
+    'freeCodeCamp/seed/challenges/02-javascript-algorithms-and-data-structures/es6.json',
+    'freeCodeCamp/seed/challenges/03-front-end-libraries/react.json'
   ]
   const fcc_index = {}
   fcc_includes.forEach(c => {
