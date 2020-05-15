@@ -10,8 +10,8 @@ export default class TestOutput  extends Component {
     test: PropTypes.string.isRequired
   };
   
-  makeMessage = (test) => {
-    const splitArr = this.props.test.split("'message:");
+  makeMessage = () => {
+    const splitArr = this.props.test.split("'message:")
     return splitArr[1].replace("');", "")
   }
   

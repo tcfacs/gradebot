@@ -1,6 +1,6 @@
 import './index.css'
 
-import GradeBot from './GradeBot'
+import GradeBot from './Gradebot'
 import React from 'react'
 import ReactDOM from 'react-dom'
 

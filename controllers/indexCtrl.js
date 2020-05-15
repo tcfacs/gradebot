@@ -19,10 +19,10 @@ function getAssignment (id) {
 
 const loadFreeCodeCampChallenges = () => {
   const fccIncludes = [
-    'seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json'
+    'seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json',
     // 'seed/challenges/02-javascript-algorithms-and-data-structures/object-oriented-programming.json',
     // 'seed/challenges/02-javascript-algorithms-and-data-structures/es6.json',
-    // 'seed/challenges/01-responsive-web-design/basic-html-and-html5.json',
+    'seed/challenges/01-responsive-web-design/basic-html-and-html5.json',
     // 'seed/challenges/03-front-end-libraries/jquery.json',
     // 'seed/challenges/03-front-end-libraries/react.json'
 
@@ -63,7 +63,7 @@ let codeEval = (req, res, next) => {
 }
 
 function getState (req, res) {
-  const assignment = getAssignment('587d7b7e367417b2b2512b21')
+  const assignment = getAssignment(req.query.assignmentid)
   console.log(assignment)
   // req.session.assignment.syntax = req.session.syntax || 'javascript'
   // console.log(assignment.syntax)

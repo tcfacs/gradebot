@@ -168,7 +168,7 @@
       ],
       "tests": [
         "assert($(\"button\").hasClass(\"animated\") && $(\"button\").hasClass(\"bounce\"), 'message: Use the jQuery <code>addClass&#40&#41</code> function to give the classes <code>animated</code> and <code>bounce</code> to your <code>button</code> elements.');",
-        "assert(!code.match(/class.*animated/g), 'message: Only use jQuery to add these colors to the element.');"
+        "assert(!!code.match(/class.*animated/g), 'message: Only use jQuery to add these colors to the element.');"
       ],
       "type": "waypoint",
       "challengeType": 0,
@@ -957,7 +957,7 @@
       ],
       "tests": [
         "assert($(\"#target4\").length === 0 && code.match(/\\$\\([\"']#target4[\"']\\).remove\\(\\)/g), 'message: Use jQuery to remove your <code>target4</code> element from your page.');",
-        "assert(code.match(/id=\"target4/g) && !code.match(/<!--.*id=\"target4\".*-->/g) && $(\"#right-well\").length > 0, 'message: Only use jQuery to remove this element.');"
+        "assert(!code.match(/id=\"target4/g) && !code.match(/<!--.*id=\"target4\".*-->/g) && $(\"#right-well\").length > 0, 'message: Only use jQuery to remove this element.');"
       ],
       "type": "waypoint",
       "challengeType": 0,

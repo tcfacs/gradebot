@@ -83,7 +83,7 @@ typings/
 
 # gatsby files
 .cache/
-public
+# public
 
 # vuepress build output
 .vuepress/dist
@@ -99,3 +99,6 @@ public
 
 # TernJS port file
 .tern-port
+
+canvas-coding-quiz-lti/
+.DS_Store
