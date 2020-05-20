@@ -14,16 +14,18 @@ import httpClient from '../httpClient.js';
 import jsdom from 'jsdom';
 
 import iPhone from './iphone.png';
-import { addBootstrap,
+import {
+  addBootstrap,
   addAnimateCSSLibrary,
   addJQueryPlayGroundStyles,
-  addJQuery } from './helperUtils';
+  addJQuery,
+} from './helperUtils';
 
 import 'brace/mode/javascript';
 import 'brace/mode/html';
 import 'brace/theme/monokai';
 
-const __DEBUG = false;
+const __DEBUG = true;
 
 const override = css`
   display: block;
@@ -46,7 +48,7 @@ export default class GradeBot extends Component {
   };
 
   runTestIframe(text, challenge) {
-    return new Promise(res => {
+    return new Promise((res) => {
       var iframe = document.createElement('iframe');
       iframe.src =
         'https://gradebot.tlmworks.org/public/iframe-grader/testframe.html';
@@ -55,7 +57,7 @@ export default class GradeBot extends Component {
       document.querySelector('.test-iframe').appendChild(iframe);
       iframe.contentWindow.addEventListener(
         'message',
-        function(e) {
+        function (e) {
           if (e.data.loaded) {
             iframe.contentWindow.postMessage(
               {
@@ -82,7 +84,7 @@ export default class GradeBot extends Component {
       code: this._editor.getValue(),
       assignment: this.state.assignment,
     };
-    httpClient.grade(body, this.sessionId).then(res => {
+    httpClient.grade(body, this.sessionId).then((res) => {
       this.setState({
         completed: res.data.message,
       });
@@ -96,31 +98,34 @@ export default class GradeBot extends Component {
     return result;
   }
 
-  injectJS (code, enableLocalStorage = true) {
+  injectJS(code, enableLocalStorage = true) {
     code = code === '</script><script>' ? '' : code;
-    const iFrameDoc = document.getElementById('iframe').contentWindow.document;
+    const iFrameDoc = document.getElementById('iframe').contentWindow
+      .document;
     const iFrameHead = iFrameDoc.head;
     const scripts = iFrameDoc.scripts;
-   
+
     // Remove the old test script tag. NOT the one that call's the jQuery
     // Reason - We don't want to let them build up with each failed test submission.
-    __DEBUG && console.log("length: ", scripts.length);
+    __DEBUG && console.log('length: ', scripts.length);
     let length = scripts.length;
-    if (length > 1) { 
+    if (length > 1) {
       while (length > 1) {
         scripts[length - 1].remove();
         length--;
       }
-     }
-    
+    }
+
     const myScript = document.createElement('script');
 
     // We will use localStorage to save the contents of the JSDOM.
-    // This is to get around an issue with running JSDOM on the 
+    // This is to get around an issue with running JSDOM on the
     // client-side as opposed to on node.js
-    // This snippet will be removed before being sent to server. 
+    // This snippet will be removed before being sent to server.
     // Leaving it in does not affect the server or it grader.
-    const jsdomLocalStorage = enableLocalStorage ? `$(function(){window.localStorage.setItem('html',document.head.innerHTML+''+document.body.innerHTML);});` : '';
+    const jsdomLocalStorage = enableLocalStorage
+      ? `$(function(){window.localStorage.setItem('html',document.head.innerHTML+''+document.body.innerHTML);});`
+      : '';
     myScript.innerHTML = code + jsdomLocalStorage;
     iFrameHead.appendChild(myScript);
 
@@ -130,42 +135,68 @@ export default class GradeBot extends Component {
   }
 
   runTests = (enableLocalStorage = false) => {
-    let { script } = this.loadEditor();     
-    
+    let { script } = this.loadEditor();
+
     const jQueryDomEval = (_script) => {
       return new Promise((resolve, reject) => {
         const { JSDOM } = jsdom;
-        const iFrame = new JSDOM(`<!DOCTYPE html> ${_script}`, { runScripts: "dangerously", resources: "usable" });
-        __DEBUG && console.log('iFrame', iFrame)
-        
+        const iFrame = new JSDOM(`<!DOCTYPE html> ${_script}`, {
+          runScripts: 'dangerously',
+          resources: 'usable',
+        });
+        __DEBUG && console.log('iFrame', iFrame);
+
         // JSDOM has no done() or a promise/callback so we have to wait to grab
-        // processed DOM from localStorage (this is an issue workaround) 
+        // processed DOM from localStorage (this is an issue workaround)
         // Wait for the script to write to localStorage
         setTimeout(() => {
           const iFrameHTML = localStorage.getItem('html');
           localStorage.removeItem('html');
           // Remove all of the links and scripts that were added for test
-          const iFrameHTMLRegEx1 = iFrameHTML && iFrameHTML.replace(/\$\(function\(\){window.localStorage.setItem\('html',document.head.innerHTML\+''\+document.body.innerHTML\);\}\);/g, '');
-          const iFrameHTMLRegEx2 = iFrameHTMLRegEx1 && iFrameHTMLRegEx1.replace(/<link(.*?)$/img, "");
+          const iFrameHTMLRegEx1 =
+            iFrameHTML &&
+            iFrameHTML.replace(
+              /\$\(function\(\){window.localStorage.setItem\('html',document.head.innerHTML\+''\+document.body.innerHTML\);\}\);/g,
+              '',
+            );
+          const iFrameHTMLRegEx2 =
+            iFrameHTMLRegEx1 &&
+            iFrameHTMLRegEx1.replace(/<link(.*?)$/gim, '');
           const iFrameHTMLRegEx = `<script>${iFrameHTMLRegEx2}`;
-          __DEBUG && console.log('iFrameHTMLRegEx output from JSDOM: ', iFrameHTMLRegEx);
+          __DEBUG &&
+            console.log(
+              'iFrameHTMLRegEx output from JSDOM: ',
+              iFrameHTMLRegEx,
+            );
           resolve(iFrameHTMLRegEx);
-        }, 100); 
+        }, 100);
       });
     };
-    
-    this.runScriptedCode(script, true)
-    .then((scriptedCode) => {
-      jQueryDomEval(scriptedCode)
-        .then((iFrameHTMLProcessed) => {
-          __DEBUG && console.log('iFrameHTMLProcessed OUTPUT ****=>', iFrameHTMLProcessed);
-          this.makeTests(iFrameHTMLProcessed);
-        })
-        .catch((error) => {console.error(`${error} Error retrieving iFrame data from storage`)});
-    })
-      .catch(error => console.error('Big error with the script injection call', error));
 
-  } // runTests()
+    this.runScriptedCode(script, true)
+      .then((scriptedCode) => {
+        jQueryDomEval(scriptedCode)
+          .then((iFrameHTMLProcessed) => {
+            __DEBUG &&
+              console.log(
+                'iFrameHTMLProcessed OUTPUT ****=>',
+                iFrameHTMLProcessed,
+              );
+            this.makeTests(iFrameHTMLProcessed);
+          })
+          .catch((error) => {
+            console.error(
+              `${error} Error retrieving iFrame data from storage`,
+            );
+          });
+      })
+      .catch((error) =>
+        console.error(
+          'Big error with the script injection call',
+          error,
+        ),
+      );
+  }; // runTests()
 
   loadEditor = () => {
     const assignmentId = this.state.assignment.id;
@@ -182,49 +213,55 @@ export default class GradeBot extends Component {
     return {
       assignmentId,
       code,
-      script
-    }
-  }
+      script,
+    };
+  };
 
   runScriptedCode = (script, enableLocalStorage) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const scriptedCode = this.injectJS(script, enableLocalStorage);
+        const scriptedCode = this.injectJS(
+          script,
+          enableLocalStorage,
+        );
         resolve(scriptedCode);
       }, 100); // Delay Needed or will throw
     });
-  }
+  };
 
   makeTests = async (editedData = null) => {
-    let { assignmentId, code, script } = this.loadEditor()
+    let { assignmentId, code, script } = this.loadEditor();
     this.runScriptedCode(script); //  Makes iFrame responsive on server call
     code = editedData || code;
-    
-      const data = {
-        code,
-        head:
+
+    const data = {
+      code,
+      head:
         this.state.assignment.head &&
         this.state.assignment.head.join('\n'),
-        tail:
+      tail:
         this.state.assignment.tail &&
         this.state.assignment.tail.join('\n'),
-        tests: this.state.assignment.tests,
-        syntax: this.state.syntax,
-        html: code,
-      };
+      tests: this.state.assignment.tests,
+      syntax: this.state.syntax,
+      html: code,
+    };
 
-      httpClient.testCode(data, assignmentId).then(res => {
-        __DEBUG && console.log('data: ', data)
-        __DEBUG && console.log('code: ', code)
+    httpClient
+      .testCode(data, assignmentId)
+      .then((res) => {
+        __DEBUG && console.log('data: ', data);
+        __DEBUG && console.log('code: ', code);
         this.setState({
           passing: res.data,
           challengeSeed: [code],
         });
-      }).catch((error) => {
-        console.error(`Big Big => ${error} <= Error testing Code`);
       })
+      .catch((error) => {
+        console.error(`Big Big => ${error} <= Error testing Code`);
+      });
   };
-  
+
   async componentDidMount() {
     this._editor = this.ace.editor;
     this._editor.session.setOption('indentedSoftWrap', false);
@@ -235,7 +272,7 @@ export default class GradeBot extends Component {
     addJQueryPlayGroundStyles();
     addJQuery();
 
-    await httpClient.getChallenge(this.sessionId).then(res => {
+    await httpClient.getChallenge(this.sessionId).then((res) => {
       const description = res.data.assignment.description;
       const instructions = description.splice(
         res.data.assignment.description.indexOf('<hr>') + 1,
@@ -256,9 +293,12 @@ export default class GradeBot extends Component {
   onReset = () => {
     const iframeDoc = document.getElementById('iframe').contentWindow
       .document;
-    this.setState(prevState => ({
-      challengeSeed: this.challengeSeed,
-    }), this.makeTests ); // Use callback to re-animate the iframe
+    this.setState(
+      (prevState) => ({
+        challengeSeed: this.challengeSeed,
+      }),
+      this.makeTests,
+    ); // Use callback to re-animate the iframe
     iframeDoc.body.innerHTML = this.challengeSeed.join('\n');
   };
 
@@ -328,7 +368,7 @@ export default class GradeBot extends Component {
                 mode={this.state.syntax}
                 theme='monokai'
                 value={challengeSeed.join('\n')}
-                ref={instance => {
+                ref={(instance) => {
                   this.ace = instance;
                 }}
                 wrapEnabled={true}
@@ -342,7 +382,7 @@ export default class GradeBot extends Component {
                   hoverColor='#1c7269'
                   disabled={loading}
                   isDisabled={loading}
-                  onClick={ this.runTests }
+                  onClick={this.runTests}
                 >
                   {loading ? (
                     <ClipLoader css={override} size={20} />
@@ -352,7 +392,7 @@ export default class GradeBot extends Component {
                 </Button>
                 <Button
                   color='lightpink'
-                  onClick={ this.onReset }
+                  onClick={this.onReset}
                   hoverColor='#ce3a51'
                   isDisabled={loading}
                   disabled={loading}
@@ -369,7 +409,7 @@ export default class GradeBot extends Component {
               }}
             >
               <div>
-                <img src={iPhone} alt='iPhone'/>
+                <img src={iPhone} alt='iPhone' />
                 <iframe id='iframe' title='jquery'></iframe>
               </div>
             </div>
@@ -379,4 +419,3 @@ export default class GradeBot extends Component {
     );
   }
 } // END OF class Gradebot
-
