@@ -15,8 +15,11 @@ canvas.
   - CONSUMER_KEY = gradebot
   - CONSUMER_SECRET = consumersecret
 
-Install instructions: to come
+Install instructions:
+
+- To run gradebot `node server.js`
 
 ### Credits:
+
 - LTI integration: https://github.com/omsmith/ims-lti
 - Example coding challenges: https://github.com/freecodecamp/freecodecamp
