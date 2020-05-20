@@ -6,41 +6,8 @@ const assert = chai.assert;
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const { getAssignment } = require('../helpers/freecodecamp');
-// const fs =require('fs')
 const path = require('path');
 const cheapsession = {};
-// const fcc = load_freecodecamp_challenges()
-
-// //Helper Functions
-// function getAssignment(id) {
-//   if (fcc.fcc_index[id]) {
-//     const challenge = fcc.fcc_index[id]
-//     console.log('found FCC challenge',challenge)
-//     return challenge
-//   }
-//   console.error(`unable to find assignment with id ${id}`)
-// }
-
-// function load_freecodecamp_challenges() {
-//   const fcc_includes = [
-//     'seed/challenges/02-javascript-algorithms-and-data-structures/basic-javascript.json',
-//     'seed/challenges/01-responsive-web-design/basic-html-and-html5.json',
-//     'seed/challenges/01-responsive-web-design/basic-css.json',
-//     'seed/challenges/03-front-end-libraries/bootstrap.json',
-//     'seed/challenges/03-front-end-libraries/jquery.json',
-//     'seed/challenges/01-responsive-web-design/css-flexbox.json',
-//     'seed/challenges/02-javascript-algorithms-and-data-structures/es6.json',
-//     'seed/challenges/03-front-end-libraries/react.json'
-//   ]
-//   const fcc_index = {}
-//   fcc_includes.forEach(c => {
-//     const fcc_data = JSON.parse(fs.readFileSync(c))
-//     for (let challenge of fcc_data.challenges) {
-//       fcc_index[challenge.id] = challenge
-//     }
-//   })
-//   return {fcc_index}
-// }
 
 let codeEval = (req, res, next) => {
   const data = req.body;
@@ -53,10 +20,9 @@ let codeEval = (req, res, next) => {
   ).window;
   const $ = require('jquery')(window);
   const document = window.document;
-  // window.document.body.innerHTML += code
   const sandbox = { assert, expect, chai, document, $, code };
   vm.createContext(sandbox);
-  tests.forEach(test => {
+  tests.forEach((test) => {
     let fullTest = isHTML
       ? test
       : `${data.head} \n  \n ${code};; \n ${data.tail} \n ${test} `;
@@ -68,6 +34,7 @@ let codeEval = (req, res, next) => {
       evalOfTests.push(false);
     }
   });
+  console.log(evalOfTests);
   return evalOfTests;
 };
 

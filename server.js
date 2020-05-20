@@ -4,13 +4,13 @@ const path = require('path');
 const session = require('express-session');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3032;
+const PORT = process.env.PORT || 8000;
 const app = express();
 
 const ltiRoute = require('./routes/lti');
 const indexRoute = require('./routes/index');
 
-app.use(express.static(path.join(__dirname, 'pubic')));
+app.use(express.static(path.join(__dirname, 'build')));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,10 +26,6 @@ app.use(
 app.use('/', indexRoute);
 app.use('/lti', ltiRoute);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(`${__dirname}/src/public/index.html`));
-});
-
-app.listen(PORT, err =>
+app.listen(PORT, (err) =>
   console.log(err || `server running on ${PORT}`),
 );

@@ -7,7 +7,6 @@
     "@freecodecamp/curriculum": "^3.2.1",
     "animate.css": "^4.0.0",
     "axios": ">=0.18.1",
-    "babel-eslint": "^8.2.6",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-jq": "0.0.9",
@@ -17,7 +16,6 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "ims-lti": "^3.0.2",
-    "jQuery": "^1.7.4",
     "jquery": "^3.5.1",
     "jsdom": "^11.12.0",
     "lodash": "^4.17.15",
@@ -30,7 +28,7 @@
     "react-ace-editor": "0.0.2",
     "react-dom": "^16.9.0",
     "react-monaco-editor": "^0.17.2",
-    "react-scripts": "^1.1.1",
+    "react-scripts": "^3.4.1",
     "react-spinners": "^0.6.1",
     "standard": "^11.0.1",
     "styled-components": "^4.4.1"
@@ -42,5 +40,17 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3032"
+  "proxy": "http://localhost:8000",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
