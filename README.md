@@ -98,7 +98,7 @@ function loadFreecodecampChallenges() {
 }
 ```
 
-#\*2
+\*2
 
 ```js
 function get(req, res) {
